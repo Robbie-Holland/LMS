@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Last Man Standing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+      --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+      --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+      --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+      --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+      --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      --color-bg: #f7f6f2;
+      --color-surface: #f9f8f5;
+      --color-surface-2: #fbfbf9;
+      --color-divider: #dcd9d5;
+      --color-border: #d4d1ca;
+      --color-text: #28251d;
+      --color-text-muted: #7a7974;
+      --color-text-inverse: #f9f8f4;
+      --color-primary: #01696f;
+      --color-primary-hover: #0c4e54;
+      --color-primary-highlight: #cedcd8;
+      --color-success: #437a22;
+      --color-warning: #964219;
+      --color-danger: #a13544;
+      --radius-sm: 0.375rem;
+      --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;
+      --radius-xl: 1rem;
+      --shadow-sm: 0 1px 2px rgba(27,24,18,0.06);
+      --shadow-md: 0 8px 24px rgba(27,24,18,0.08);
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'DM Sans', Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--color-text);
+      background: linear-gradient(180deg, #f7f6f2 0%, #f1efe9 100%);
+    }
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+    button, input, select { font: inherit; }
+    .hidden { display: none !important; }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: var(--space-4);
+      padding-bottom: 6rem;
+    }
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+    }
+    .skip-link:focus {
+      left: var(--space-4);
+      top: var(--space-4);
+      background: var(--color-primary);
+      color: white;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      z-index: 999;
+    }
+
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4) 0 var(--space-8);
+    }
+    .brand { display: flex; align-items: center; gap: var(--space-3); }
+    .brand-mark {
+      width: 42px; height: 42px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--color-primary-highlight);
+      color: var(--color-primary);
+      box-shadow: var(--shadow-sm);
+      flex-shrink: 0;
+    }
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      line-height: 1;
+    }
+    .brand-subtitle { color: var(--color-text-muted); font-size: var(--text-sm); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: var(--space-6);
+      align-items: stretch;
+      margin-bottom: var(--space-8);
+    }
+    .panel {
+      background: rgba(251,251,249,0.9);
+      border: 1px solid rgba(40,37,29,0.12);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      padding: var(--space-6);
+      backdrop-filter: blur(8px);
+    }
+    .hero-copy h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      line-height: 1;
+      margin: 0 0 var(--space-4);
+      max-width: 10ch;
+    }
+    .hero-copy p {
+      color: var(--color-text-muted);
+      max-width: 60ch;
+      margin: 0 0 var(--space-5);
+    }
+    .hero-meta {
+      display: flex; flex-wrap: wrap; gap: var(--space-3);
+      margin-top: var(--space-4);
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: 999px;
+      background: var(--color-surface);
+      border: 1px solid rgba(40,37,29,0.1);
+      font-size: var(--text-sm);
+    }
+    .status-grid {
+      display: grid; gap: var(--space-4);
+      align-content: start;
+    }
+    .mini-stat-title { color: var(--color-text-muted); font-size: var(--text-sm); }
+    .mini-stat-value { font-size: var(--text-xl); font-weight: 700; }
+
+    .section-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid transparent;
+      border-bottom: 1px solid var(--color-divider);
+      margin: 0 calc(var(--space-4) * -1) var(--space-8);
+      padding: var(--space-3) var(--space-4);
+    }
+    .nav-row {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      gap: var(--space-2);
+      overflow-x: auto;
+    }
+    .nav-link {
+      white-space: nowrap;
+      text-decoration: none;
+      padding: 0.7rem 1rem;
+      border-radius: 999px;
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+    .nav-link:hover, .nav-link:focus-visible {
+      color: var(--color-primary);
+      border-color: rgba(1,105,111,0.18);
+      background: rgba(206,220,216,0.45);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--space-6);
+    }
+    .full { grid-column: 1 / -1; }
+    .eight { grid-column: span 8; }
+    .four { grid-column: span 4; }
+    .six { grid-column: span 6; }
+
+    h2 {
+      margin: 0 0 var(--space-3);
+      font-size: var(--text-lg);
+    }
+    .eyebrow {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      margin-bottom: var(--space-2);
+    }
+    .subtext { color: var(--color-text-muted); font-size: var(--text-sm); }
+
+    .stack { display: grid; gap: var(--space-4); }
+    .field { display: grid; gap: var(--space-2); }
+    label { font-size: var(--text-sm); color: var(--color-text-muted); }
+    input, select {
+      width: 100%;
+      min-height: 48px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(40,37,29,0.14);
+      background: white;
+      padding: 0.9rem 1rem;
+      color: var(--color-text);
+    }
+    input:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    .btn {
+      min-height: 48px;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 0.95rem 1.1rem;
+      cursor: pointer;
+      font-weight: 700;
+      transition: 180ms ease;
+    }
+    .btn-primary { background: var(--color-primary); color: white; }
+    .btn-primary:hover { background: var(--color-primary-hover); }
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-text);
+      border: 1px solid rgba(40,37,29,0.14);
+    }
+    .btn-row { display: flex; gap: var(--space-3); flex-wrap: wrap; }
+
+    .callout {
+      background: linear-gradient(135deg, rgba(206,220,216,0.45), rgba(251,251,249,0.95));
+      border: 1px solid rgba(1,105,111,0.16);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+    }
+    .callout p { margin: 0; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      font-size: var(--text-xs);
+      font-weight: 700;
+    }
+    .badge-standing { background: rgba(67,122,34,0.15); color: var(--color-success); }
+    .badge-fallen { background: rgba(161,53,68,0.15); color: var(--color-danger); }
+    .badge-pending { background: rgba(150,66,25,0.14); color: var(--color-warning); }
+    .badge-open { background: rgba(1,105,111,0.12); color: var(--color-primary); }
+
+    .rules-list, .plain-list { margin: 0; padding-left: 1.1rem; }
+    .rules-list li, .plain-list li { margin-bottom: 0.55rem; }
+
+    .leaderboard-list, .admin-list, .pick-list { display: grid; gap: var(--space-3); }
+    .row-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-4);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-2);
+      border: 1px solid rgba(40,37,29,0.08);
+    }
+    .row-card img {
+      width: 34px; height: 34px; object-fit: contain; flex-shrink: 0;
+    }
+    .row-main { display: flex; align-items: center; gap: var(--space-3); min-width: 0; }
+    .row-main-text { min-width: 0; }
+    .row-main-text strong, .row-main-text span { display: block; }
+    .row-main-text small { color: var(--color-text-muted); }
+    .row-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; justify-content: flex-end; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+    }
+    th, td {
+      text-align: left;
+      padding: 0.9rem 0.75rem;
+      border-bottom: 1px solid var(--color-divider);
+      vertical-align: middle;
+    }
+    th { color: var(--color-text-muted); font-weight: 500; }
+
+    .muted-box {
+      color: var(--color-text-muted);
+      background: var(--color-surface);
+      border: 1px dashed rgba(40,37,29,0.15);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+    }
+    .flash {
+      margin-top: var(--space-3);
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+    }
+    .flash.ok { background: rgba(67,122,34,0.12); color: var(--color-success); }
+    .flash.warn { background: rgba(150,66,25,0.12); color: var(--color-warning); }
+    .flash.error { background: rgba(161,53,68,0.12); color: var(--color-danger); }
+    .inline-note { color: var(--color-text-muted); font-size: var(--text-sm); }
+
+    @media (max-width: 900px) {
+      .hero, main { grid-template-columns: 1fr; }
+      .eight, .four, .six, .full { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <div class="shell">
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-label="Last Man Standing logo">
+            <path d="M12 3l7 4v5c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V7l7-4z"></path>
+            <path d="M9.5 12.5l1.7 1.7 3.3-4"></path>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">Last Man Standing</div>
+          <div class="brand-subtitle" id="competition-subtitle">Premier League survivor pool</div>
+        </div>
+      </div>
+      <a class="btn btn-secondary" href="#admin">Admin</a>
+    </header>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="panel hero-copy">
+        <div class="eyebrow">Private competition</div>
+        <h1 id="hero-title">One pick each week. No second chances.</h1>
+        <p id="hero-summary">Register, pay the buy-in, wait for approval, and submit one team each gameweek. If your team fails, you fall. If it wins, you stand and move on.</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="#join">Join now</a>
+          <a class="btn btn-secondary" id="fixtures-link" href="#" target="_blank" rel="noopener noreferrer">View fixtures</a>
+        </div>
+        <div class="hero-meta">
+          <div class="pill"><span>Round</span><strong id="hero-round">R1</strong></div>
+          <div class="pill"><span>Gameweek</span><strong id="hero-gameweek">1</strong></div>
+          <div class="pill"><span>Buy-in</span><strong id="hero-buyin">€10</strong></div>
+          <div class="pill"><span>Status</span><strong id="hero-status">Open</strong></div>
+        </div>
+      </div>
+      <aside class="panel status-grid" aria-label="Competition snapshot">
+        <div>
+          <div class="mini-stat-title">Registered players</div>
+          <div class="mini-stat-value" id="stat-players">0</div>
+        </div>
+        <div>
+          <div class="mini-stat-title">Standing</div>
+          <div class="mini-stat-value" id="stat-standing">0</div>
+        </div>
+        <div>
+          <div class="mini-stat-title">Picks submitted</div>
+          <div class="mini-stat-value" id="stat-picks">0</div>
+        </div>
+        <div class="callout">
+          <p><strong>Deadline:</strong> <span id="deadline-text">Set in Google Sheets</span></p>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <div class="section-nav" aria-label="Section navigation">
+    <div class="nav-row">
+      <a class="nav-link" href="#join">Join</a>
+      <a class="nav-link" href="#pick">Make pick</a>
+      <a class="nav-link" href="#standings">Standings</a>
+      <a class="nav-link" href="#rules">Rules</a>
+      <a class="nav-link" href="#admin">Admin</a>
+    </div>
+  </div>
+
+  <div class="shell">
+    <main id="main-content">
+      <section id="join" class="eight panel" aria-labelledby="join-title">
+        <div class="eyebrow">Registration</div>
+        <h2 id="join-title">Join this round</h2>
+        <p class="subtext">Enter your details, send the buy-in, and wait for approval before making your pick.</p>
+        <form id="register-form" class="stack" novalidate>
+          <div class="field">
+            <label for="reg-name">Full name</label>
+            <input id="reg-name" name="name" type="text" placeholder="Robbie Holland" required />
+          </div>
+          <div class="field">
+            <label for="reg-phone">Mobile number</label>
+            <input id="reg-phone" name="phone" type="tel" placeholder="087 123 4567" required />
+          </div>
+          <button class="btn btn-primary" type="submit">Submit registration</button>
+        </form>
+        <div id="register-message" class="hidden"></div>
+      </section>
+
+      <aside class="four panel">
+        <div class="eyebrow">Payment</div>
+        <h2>Buy-in</h2>
+        <p class="subtext">Pay the entry fee first, then your registration can be approved by the admin.</p>
+        <div class="callout" style="margin: 1rem 0 1.25rem;">
+          <p><strong>Buy-in:</strong> <span id="buyin-side">€10</span></p>
+          <p><strong>Round:</strong> <span id="round-side">R1</span></p>
+        </div>
+        <a id="revolut-link" class="btn btn-primary" href="#" target="_blank" rel="noopener noreferrer">Pay with Revolut</a>
+        <p class="inline-note" style="margin-top: 0.9rem;">Once payment lands, the admin can mark you approved in the sheet or from the admin panel below.</p>
+      </aside>
+
+      <section id="pick" class="six panel" aria-labelledby="pick-title">
+        <div class="eyebrow">Weekly pick</div>
+        <h2 id="pick-title">Submit your team</h2>
+        <p class="subtext">Use the same name and phone number you registered with.</p>
+        <form id="pick-form" class="stack" novalidate>
+          <div class="field">
+            <label for="pick-name">Full name</label>
+            <input id="pick-name" name="name" type="text" placeholder="Robbie Holland" required />
+          </div>
+          <div class="field">
+            <label for="pick-phone">Mobile number</label>
+            <input id="pick-phone" name="phone" type="tel" placeholder="087 123 4567" required />
+          </div>
+          <div class="field">
+            <label for="team-select">Choose your team</label>
+            <select id="team-select" name="team" required>
+              <option value="">Loading teams...</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" type="submit">Lock in my pick</button>
+        </form>
+        <div id="pick-message" class="hidden"></div>
+      </section>
+
+      <section class="six panel">
+        <div class="eyebrow">This round</div>
+        <h2>Pick activity</h2>
+        <div id="pick-activity" class="pick-list">
+          <div class="muted-box">No picks to show yet.</div>
+        </div>
+      </section>
+
+      <section id="standings" class="full panel" aria-labelledby="standings-title">
+        <div class="eyebrow">Leaderboard</div>
+        <h2 id="standings-title">Current standings</h2>
+        <p class="subtext">Picks stay hidden until reveal is switched on.</p>
+        <div id="leaderboard-wrap" class="leaderboard-list"></div>
+      </section>
+
+      <section id="rules" class="six panel" aria-labelledby="rules-title">
+        <div class="eyebrow">Rules</div>
+        <h2 id="rules-title">How it works</h2>
+        <ol class="rules-list">
+          <li>Register using your name and mobile number.</li>
+          <li>Pay the buy-in using the Revolut link.</li>
+          <li>Wait until your entry is approved.</li>
+          <li>Pick one team to win in the current gameweek.</li>
+          <li>You cannot reuse a team in a later week of the same round.</li>
+          <li>If your team fails, your status changes from Standing to Fallen.</li>
+        </ol>
+      </section>
+
+      <section class="six panel">
+        <div class="eyebrow">Notes</div>
+        <h2>Before you submit</h2>
+        <ul class="plain-list">
+          <li>Use the same phone number each week so your pick matches your entry.</li>
+          <li>Submit before the deadline shown at the top of the page.</li>
+          <li>If picks are hidden, the board will show “Pick submitted” until reveal is turned on.</li>
+        </ul>
+      </section>
+
+      <section id="admin" class="full panel" aria-labelledby="admin-title">
+        <div class="eyebrow">Admin</div>
+        <h2 id="admin-title">Admin panel</h2>
+        <p class="subtext">This uses the live Google Sheets backend. Keep your web app URL and admin secret private.</p>
+        <div class="stack" style="max-width: 520px; margin-bottom: 1.25rem;">
+          <div class="field">
+            <label for="admin-pin">Admin PIN</label>
+            <input id="admin-pin" type="password" placeholder="Enter admin PIN" />
+          </div>
+          <button class="btn btn-secondary" type="button" id="admin-unlock">Unlock admin actions</button>
+        </div>
+        <div id="admin-locked" class="muted-box">Admin actions stay hidden until the correct PIN is entered.</div>
+        <div id="admin-content" class="hidden">
+          <div class="stack">
+            <div>
+              <h3 style="margin:0 0 0.75rem; font-size: var(--text-base);">Pending approvals</h3>
+              <div id="admin-pending" class="admin-list"></div>
+            </div>
+            <div>
+              <h3 style="margin:0 0 0.75rem; font-size: var(--text-base);">Quick controls</h3>
+              <div class="btn-row">
+                <button class="btn btn-secondary" type="button" id="refresh-data">Refresh data</button>
+                <button class="btn btn-secondary" type="button" id="toggle-reveal">Toggle reveal</button>
+              </div>
+              <div id="admin-message" class="hidden"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const API_BASE = 'https://script.google.com/macros/s/AKfycbxp23_b6p_Z7ER8lnGzKQIeVvpQSfZJHoFD0uo-ztZmGq5Y4oJv82f3f4YHHib5maxTFQ/exec';
+    const ADMIN_PIN = '3313';
+    let state = { settings: {}, teams: [], players: [], picks: [], results: [] };
+    let adminUnlocked = false;
+
+    const el = (id) => document.getElementById(id);
+
+    async function getData() {
+      const res = await fetch(`${API_BASE}?action=public`);
+      if (!res.ok) throw new Error('Could not load competition data.');
+      const data = await res.json();
+      if (!data.ok) throw new Error('Backend returned an error.');
+      return data;
+    }
+
+    async function postData(payload) {
+      const res = await fetch(API_BASE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.message || 'Request failed.');
+      return data;
+    }
+
+    function formatCurrency(v) {
+      const n = Number(v);
+      return Number.isFinite(n) ? `€${n}` : '€0';
+    }
+
+    function formatDeadline(value) {
+      if (!value) return 'Not set';
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return value;
+      return d.toLocaleString('en-IE', {
+        weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    function normalizeStatus(status) {
+      const s = String(status || '').trim().toLowerCase();
+      if (s === 'standing' || s === 'alive' || s === 'approved') return 'Standing';
+      if (s === 'fallen' || s === 'dead' || s === 'out') return 'Fallen';
+      return 'Pending';
+    }
+
+    function badgeClass(status) {
+      if (status === 'Standing') return 'badge badge-standing';
+      if (status === 'Fallen') return 'badge badge-fallen';
+      return 'badge badge-pending';
+    }
+
+    function currentRoundPicks() {
+      const round = String(state.settings.currentRound || '').trim();
+      const gw = String(state.settings.currentGameweek || '').trim();
+      return state.picks.filter(p => String(p.Round || p.round || '').trim() === round && String(p.Gameweek || p.gameweek || '').trim() === gw);
+    }
+
+    function teamMap() {
+      return new Map(state.teams.map(t => [t.Team, t]));
+    }
+
+    function renderHeader() {
+      const s = state.settings || {};
+      el('competition-subtitle').textContent = s.competitionName || 'Premier League survivor pool';
+      el('hero-round').textContent = s.currentRound || 'R1';
+      el('hero-gameweek').textContent = s.currentGameweek ?? '1';
+      el('hero-buyin').textContent = formatCurrency(s.buyIn);
+      el('hero-status').textContent = s.roundStatus || 'Open';
+      el('deadline-text').textContent = formatDeadline(s.deadlineText);
+      el('buyin-side').textContent = formatCurrency(s.buyIn);
+      el('round-side').textContent = s.currentRound || 'R1';
+      el('fixtures-link').href = s.fixturesLink || '#';
+      el('revolut-link').href = s.revolutLink || '#';
+    }
+
+    function renderStats() {
+      const players = state.players || [];
+      const picks = currentRoundPicks();
+      el('stat-players').textContent = players.length;
+      el('stat-standing').textContent = players.filter(p => normalizeStatus(p.Status || p.status) === 'Standing').length;
+      el('stat-picks').textContent = picks.length;
+    }
+
+    function renderTeamOptions() {
+      const select = el('team-select');
+      select.innerHTML = '<option value="">Choose a team</option>';
+      state.teams.forEach(team => {
+        const option = document.createElement('option');
+        option.value = team.Team;
+        option.textContent = team.Team;
+        select.appendChild(option);
+      });
+    }
+
+    function renderPickActivity() {
+      const wrap = el('pick-activity');
+      const picks = currentRoundPicks();
+      wrap.innerHTML = '';
+      if (!picks.length) {
+        wrap.innerHTML = '<div class="muted-box">No picks to show yet.</div>';
+        return;
+      }
+      const reveal = !!state.settings.revealPicks;
+      const logos = teamMap();
+      picks.forEach(p => {
+        const teamName = p.Team || p.team || 'Unknown';
+        const team = logos.get(teamName);
+        const visiblePick = reveal || p.Revealed === true || p.revealed === true ? teamName : 'Hidden';
+        const card = document.createElement('div');
+        card.className = 'row-card';
+        card.innerHTML = `
+          <div class="row-main">
+            ${team && team.LogoURL && visiblePick !== 'Hidden' ? `<img src="${team.LogoURL}" alt="${teamName} crest" width="34" height="34" loading="lazy">` : '<div style="width:34px;height:34px;border-radius:50%;background:var(--color-primary-highlight);"></div>'}
+            <div class="row-main-text">
+              <strong>${p.Name || p.name || 'Player'}</strong>
+              <small>${visiblePick === 'Hidden' ? 'Pick submitted' : visiblePick}</small>
+            </div>
+          </div>
+          <span class="badge badge-open">${p.Submitted || p.submitted || ''}</span>`;
+        wrap.appendChild(card);
+      });
+    }
+
+    function renderLeaderboard() {
+      const wrap = el('leaderboard-wrap');
+      wrap.innerHTML = '';
+      if (!state.players.length) {
+        wrap.innerHTML = '<div class="muted-box">No players registered yet.</div>';
+        return;
+      }
+      const picks = currentRoundPicks();
+      const reveal = !!state.settings.revealPicks;
+      const logoLookup = teamMap();
+      state.players.forEach(player => {
+        const name = player.Name || player.name || 'Player';
+        const phone = String(player.Phone || player.phone || '').trim();
+        const status = normalizeStatus(player.Status || player.status);
+        const pick = picks.find(p => String(p.Phone || p.phone || '').trim() === phone || String(p.Name || p.name || '').trim() === name);
+        const teamName = pick ? (pick.Team || pick.team) : '';
+        const team = logoLookup.get(teamName);
+        const visiblePick = pick ? ((reveal || pick.Revealed === true || pick.revealed === true) ? teamName : 'Pick submitted') : 'No pick yet';
+        const row = document.createElement('div');
+        row.className = 'row-card';
+        row.innerHTML = `
+          <div class="row-main">
+            ${team && team.LogoURL && visiblePick !== 'Pick submitted' && visiblePick !== 'No pick yet' ? `<img src="${team.LogoURL}" alt="${teamName} crest" width="34" height="34" loading="lazy">` : '<div style="width:34px;height:34px;border-radius:50%;background:var(--color-surface);"></div>'}
+            <div class="row-main-text">
+              <strong>${name}</strong>
+              <small>${visiblePick}</small>
+            </div>
+          </div>
+          <span class="${badgeClass(status)}">${status}</span>`;
+        wrap.appendChild(row);
+      });
+    }
+
+    function renderAdmin() {
+      const wrap = el('admin-pending');
+      if (!adminUnlocked) return;
+      const pending = state.players.filter(p => normalizeStatus(p.Status || p.status) === 'Pending');
+      wrap.innerHTML = '';
+      if (!pending.length) {
+        wrap.innerHTML = '<div class="muted-box">No pending registrations right now.</div>';
+        return;
+      }
+      pending.forEach(player => {
+        const row = document.createElement('div');
+        row.className = 'row-card';
+        const name = player.Name || player.name || 'Player';
+        const phone = player.Phone || player.phone || '';
+        row.innerHTML = `
+          <div class="row-main-text">
+            <strong>${name}</strong>
+            <small>${phone}</small>
+          </div>
+          <div class="row-actions">
+            <button class="btn btn-primary" type="button" data-approve="${phone}">Approve</button>
+          </div>`;
+        wrap.appendChild(row);
+      });
+      wrap.querySelectorAll('[data-approve]').forEach(btn => btn.addEventListener('click', () => approvePlayer(btn.dataset.approve)));
+    }
+
+    function showMessage(id, kind, text) {
+      const box = el(id);
+      box.className = `flash ${kind}`;
+      box.textContent = text;
+      box.classList.remove('hidden');
+    }
+
+    async function refreshAll() {
+      state = await getData();
+      renderHeader();
+      renderStats();
+      renderTeamOptions();
+      renderPickActivity();
+      renderLeaderboard();
+      renderAdmin();
+    }
+
+    async function registerPlayer(event) {
+      event.preventDefault();
+      const name = el('reg-name').value.trim();
+      const phone = el('reg-phone').value.trim();
+      if (!name || !phone) {
+        showMessage('register-message', 'error', 'Please enter both your name and mobile number.');
+        return;
+      }
+      try {
+        await postData({ action: 'register', name, phone });
+        showMessage('register-message', 'ok', 'Registration submitted. Please complete payment and wait for approval.');
+        event.target.reset();
+        await refreshAll();
+      } catch (err) {
+        showMessage('register-message', 'error', err.message);
+      }
+    }
+
+    async function submitPick(event) {
+      event.preventDefault();
+      const name = el('pick-name').value.trim();
+      const phone = el('pick-phone').value.trim();
+      const team = el('team-select').value;
+      if (!name || !phone || !team) {
+        showMessage('pick-message', 'error', 'Please complete all pick fields.');
+        return;
+      }
+      try {
+        await postData({ action: 'submitPick', name, phone, team });
+        showMessage('pick-message', 'ok', `Your ${team} pick has been submitted.`);
+        event.target.reset();
+        await refreshAll();
+      } catch (err) {
+        showMessage('pick-message', 'error', err.message);
+      }
+    }
+
+    async function approvePlayer(phone) {
+      try {
+        await postData({ action: 'approvePlayer', phone, adminPin: ADMIN_PIN });
+        showMessage('admin-message', 'ok', 'Player approved.');
+        await refreshAll();
+      } catch (err) {
+        showMessage('admin-message', 'error', err.message);
+      }
+    }
+
+    async function toggleReveal() {
+      try {
+        await postData({ action: 'toggleReveal', adminPin: ADMIN_PIN });
+        showMessage('admin-message', 'ok', 'Reveal setting updated.');
+        await refreshAll();
+      } catch (err) {
+        showMessage('admin-message', 'error', err.message);
+      }
+    }
+
+    function unlockAdmin() {
+      const pin = el('admin-pin').value.trim();
+      if (pin !== ADMIN_PIN) {
+        showMessage('admin-message', 'error', 'Incorrect admin PIN.');
+        return;
+      }
+      adminUnlocked = true;
+      el('admin-locked').classList.add('hidden');
+      el('admin-content').classList.remove('hidden');
+      renderAdmin();
+      showMessage('admin-message', 'ok', 'Admin controls unlocked for this session.');
+    }
+
+    el('register-form').addEventListener('submit', registerPlayer);
+    el('pick-form').addEventListener('submit', submitPick);
+    el('admin-unlock').addEventListener('click', unlockAdmin);
+    el('refresh-data').addEventListener('click', refreshAll);
+    el('toggle-reveal').addEventListener('click', toggleReveal);
+
+    refreshAll().catch(err => {
+      el('leaderboard-wrap').innerHTML = `<div class="muted-box">${err.message}</div>`;
+      el('pick-activity').innerHTML = '<div class="muted-box">Could not load live data yet.</div>';
+    });
+  </script>
+</body>
+</html>
